@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require('path');
+const uniqID = require('uniqid');
 
 const app = express();
 
@@ -13,15 +14,53 @@ app.use(express.static('public'));
 
 
 
-fs.readFile("./db/db.json", 'utf8', (err, data) => {
-    if (err) throw err;
-    var notes = JSON.parse(data);
-    console.log(notes);
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/index.html'));
 });
 
+
+
+app.get('/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/notes.html'));
+});
+
+
+
 app.get('/api/notes', (req, res) => {
-    res.json(notes);
-    console.log(`${req.method} request received`);
+    res.sendFile(path.join(__dirname, '/db/db.json'));
+});
+
+
+app.post('/api/notes', (req, res) => {
+  console.info(`${req.method} request received to add a review`);
+  const { title, text } = req.body;
+  if (title && text) {
+    const newNote = {
+      title,
+      text,
+      note_id: uniqID(),
+    };
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+      if (err) {
+        console.error(err);
+      } else {
+        const parsedNotes = JSON.parse(data);
+        parsedNotes.push(newNote);
+        fs.writeFile('./db/db.json', JSON.stringify(parsedNotes, null, 4),
+          (writeErr) =>
+            writeErr ? console.error(writeErr) : console.info('Successfully updated notes!')
+        );
+      }
+    });
+    const response = {
+      status: 'success',
+      body: newNote,
+    };
+    console.log(response);
+    res.status(201).json(response);
+  } else {
+    res.status.apply(500).json('Error in posting note');
+  }
 });
 
 
