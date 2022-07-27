@@ -10,7 +10,7 @@ app.get("/notes", function(req, res) {
 
 app.post("/notes", function(req, res) {
     let newNote = {
-        id: Math.floor(Maht.random() * 100),
+        id: Math.floor(Math.random() * 100),
         title: req.body.title,
         text: req.body.text
     };
