@@ -22,4 +22,22 @@ app.post("/notes", function(req, res) {
     });
     res.json(db);
 });
+
+    app.delete("/notes/:id", function(req, res) {
+        let undeletedNotes = [];
+        for (let i = 0; i < db.length; i++) {
+            if (db[i].id != req.params.id) {
+                undeletedNotes.push(db[i]);
+            }
+        }
+        db = undeletedNotes;
+        fs.writeFileSync("./db/db.json", JSON.stringify(db), function(err, res) {
+            if (err) {
+                throw err;
+            }
+        });
+        console.log("Delete", db);
+        res.json(db);
+    });
+
 module.exports = app;
