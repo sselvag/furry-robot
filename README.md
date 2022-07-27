@@ -1,4 +1,4 @@
-# Professional README Generator
+# Note Taker
   
 ## As a small business owner, I want to be able to write and save notes so that I can organize my thoughts and keep track of tasks I need to complete. In this project, I need to create a Note Taker application that satisfies the following criteria: 
   1. When the Note Taker application opens, you should be presented with a landing page with a link to a notes page.
